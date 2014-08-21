@@ -38,8 +38,8 @@
 
 int main(int argc, char *argv[]){
   if(argc != 4){
-    fprintf(stderr, W "\nUsage: worDDoSpress requests targets_file victim\n" N);
-    fprintf(stderr, "\nEx: worDDoSpress 1000 wp_pingback www.victim.com\n\n");
+    fprintf(stderr, W "\nUsage: takedown requests targets_file victim\n" N);
+    fprintf(stderr, "\nEx: takedown 1000 wp_pingback www.victim.com\n\n");
     exit(1);
   }
 
